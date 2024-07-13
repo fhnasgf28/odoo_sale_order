@@ -12,6 +12,16 @@
                         <field name="is_booking"/>
                     </group>
                 </xpath>
+
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                    <field name="qty_booking"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field[@name='sale_order_option_ids']/tree/field[@name='quantity']" position="after">
+                    <field name="qty_booking"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field[@name='sale_order_option_ids']/tree/field[@name='qty_booking']" position="after">
+                    <field name="qty_available"/>
+                </xpath>
             </field>
         </record>
 <!--        search view-->
@@ -36,21 +46,6 @@
                 </xpath>
             </field>
          </record>
-<!--        page-->
-        <record id="view_order_form_inherit" model="ir.ui.view">
-        <field name="name">sale.order.form.inherit</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <!-- Add new page in notebook -->
-            <xpath expr="//notebook" position="inside">
-                <page string="Booking Order">
-                    <field name="qty" string='Quantity'/>
-                </page>
-            </xpath>
-        </field>
-    </record>
-
 
         <record id="action_booking_order" model="ir.actions.act_window">
             <field name="name">Booking Orders</field>
@@ -58,7 +53,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('is_booking', '=', True)]</field>
             <field name="search_view_id" ref="view_sale_order_search_inherit"/>
-<!--            <field name="context">{'default_is_booking': True}</field>-->
+            <field name="context">{'default_is_booking': True}</field>
         </record>
 
     </data>
