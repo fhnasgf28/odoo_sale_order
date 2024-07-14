@@ -4,7 +4,7 @@
         <!-- Sequences for Booking Order -->
         <record id="seq_booking_order" model="ir.sequence">
             <field name="name">Booking Order</field>
-            <field name="code">sale.order.booking</field>
+            <field name="code">sale.order.line</field>
             <field name="prefix">BOOK/%(range_year)s/</field>
             <field eval="1" name="number_next"/>
             <field eval="1" name="number_increment"/>

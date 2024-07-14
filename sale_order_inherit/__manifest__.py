@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Sale Order Inherit",
 
@@ -21,10 +20,12 @@
     'data': [
         # "security/ir.model.access.csv",
         "data/ir_sequence.xml",
-        "views/sale_order_view.xml",
+        "views/sale_order_views.xml",
+        "views/product_template_views.xml",
         # "views/booking_order_views.xml",
         "views/menus.xml",
     ],
     'installable': True,
     'application': True,
 }
+# -*- coding: utf-8 -*-

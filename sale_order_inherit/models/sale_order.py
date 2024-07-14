@@ -8,9 +8,8 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        print('method ini di klik')
         if vals.get('is_booking'):
-            sequence_code = 'sale.order.booking'
+            sequence_code = 'sale.order.line'
         else:
             sequence_code = 'sale.order'
         if vals.get('name', _('New')) == _('New'):
@@ -31,7 +30,6 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        print('method ini di klik')
         for line in self:
             if line.order_id.is_booking and line.product_id:
                 line.price_unit = line.product_id.lst_price * 1.10
