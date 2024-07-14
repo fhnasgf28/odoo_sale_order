@@ -1,24 +1,28 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     quantity_booking = fields.Float(string='Quantity Booking', compute='_compute_quantity_booking')
-    quantity_after_booking = fields.Float(string='Quantity After Booking', compute='_compute_qty_after_booking')
+    qty_after_booking = fields.Float(string='Quantity After Booking', compute='_compute_qty_after_booking')
+    order_line_ids = fields.One2many('sale.order.line', 'product_template_id', string='Order Line')
 
-    @api.depends('product_variant_ids')
+    @api.depends('order_line_ids.qty_booking')
     def _compute_quantity_booking(self):
-        print('method ini di triger')
-        for template in self:
-            total_qty_booking = 0
-            for product in template.product_variant_ids:
-                orders = self.env['sale.order.line'].search([('product_id', '=', product.id)])
-                total_qty_booking += sum(order.qty_booking for order in orders)
-            template.quantity_booking = total_qty_booking
+        for product in self:
+            total_qty_booking = sum(line.qty_booking for line in product.order_line_ids if line.order_id.is_booking)
+            product.quantity_booking = total_qty_booking
 
     @api.depends('quantity_booking', 'qty_available')
     def _compute_qty_after_booking(self):
-        print('method on hand ini di klik')
         for template in self:
-            template.quantity_after_booking = template.qty_available - template.quantity_booking
+            template.qty_after_booking = template.qty_available - template.quantity_booking
+
+    @api.onchange('quantity_booking', 'qty_available')
+    def _check_qty_after_booking(self):
+        for template in self:
+            qty_after_booking = template.qty_available - template.quantity_booking
+            if qty_after_booking < 0:
+                raise ValidationError("Quantity After Booking cannot be negative")
