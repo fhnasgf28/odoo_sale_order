@@ -22,7 +22,6 @@
         "data/ir_sequence.xml",
         "views/sale_order_views.xml",
         "views/product_template_views.xml",
-        # "views/booking_order_views.xml",
         "views/menus.xml",
     ],
     'installable': True,

@@ -20,9 +20,3 @@ class ProductTemplate(models.Model):
         for template in self:
             template.qty_after_booking = template.qty_available - template.quantity_booking
 
-    @api.onchange('quantity_booking', 'qty_available')
-    def _check_qty_after_booking(self):
-        for template in self:
-            qty_after_booking = template.qty_available - template.quantity_booking
-            if qty_after_booking < 0:
-                raise ValidationError("Quantity After Booking cannot be negative")

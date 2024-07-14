@@ -29,11 +29,18 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.qty_booking = line.product_uom_qty
 
-    @api.onchange('product_id', 'price_unit', 'product_uom_qty')
-    def _onchange_product_id(self):
+    @api.depends('product_id')
+    def _compute_product_template_id(self):
+        for record in self:
+            record.product_template_id = record.product_id.product_tmpl_id
+
+    @api.onchange('order_id.is_booking', 'price_unit', 'product_id')
+    def _onchange_is_booking(self):
         for line in self:
-            if line.order_id.is_booking:
-                line.price_subtotal = line.price_unit * line.product_uom_qty * 1.1
-            else:
-                line.price_subtotal = line.price_unit * line.product_uom_qty
+            if line.product_id:
+                price = line.product_id.lst_price
+                if line.order_id.is_booking:
+                    line.price_unit = price * 1.1
+                else:
+                    line.price_unit = price
 
