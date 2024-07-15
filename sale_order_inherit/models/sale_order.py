@@ -22,7 +22,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     qty_booking = fields.Float(string='Quantity Booking', default=1.0, store=True)
-    product_template_id = fields.Many2one('product.template', string='Product Template')
+    product_template_id = fields.Many2one('product.template', string='Product Template', compute='_compute_product_template_id')
 
     @api.onchange('product_uom_qty')
     def _onchange_qty_booking(self):
